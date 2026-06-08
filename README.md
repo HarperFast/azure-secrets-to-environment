@@ -2,7 +2,7 @@
 This project is a [Protocol Extension](https://docs.harperdb.io/docs/developers/components/reference#protocol-extension) that accesses an Azure key vault and assigns the keys to environment variables.
 
 ## Installation
-Install this package in your Harper application: `npm install --save @harperdb/azure-secrets-to-environment`
+Install this package in your Harper application: `npm install --save @harperfast/azure-secrets-to-environment`
 
 ## Configuration
 
@@ -60,4 +60,4 @@ In order for your extension to access the dotfile, you must also set the `files`
 #### Managed Credentials
 
 To prevent the storage/exposure of credentials in your deployed component code, the credentials can be "managed" outside of the component scope. Currently, the host machine
-of the harperdb container will inject an `AZURE_VAULT_MAP` as environment variable which will allow remote deployments to require just the `AZURE_VAULT_NAME`
+of the Harper container will inject an `AZURE_VAULT_MAP` as environment variable which will allow remote deployments to require just the `AZURE_VAULT_NAME`

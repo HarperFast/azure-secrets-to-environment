@@ -1,0 +1,11 @@
+# Integration-test fixture for the azure-secrets-to-environment extension.
+#
+# Uses managedCredentials: true so the extension's start() hook returns
+# { handleFile } without contacting Azure at startup.  Real Azure credential
+# flows require live vault access that is not available in CI; those flows are
+# documented as skipped in the test file.
+#
+# The extensionModule path is relative to this config file (the component root).
+
+extensionModule: ./extension.js
+managedCredentials: true
