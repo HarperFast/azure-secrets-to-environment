@@ -34,6 +34,8 @@ const harperBinPath = resolve(dirname(require.resolve('harper')), 'bin/harper.js
 
 const FIXTURE_PATH = resolve(__dirname, 'fixtures', 'azure-extension');
 
+let harperCtx: ContextWithHarper;
+
 function authHeaders(ctx: ContextWithHarper): Record<string, string> {
     const creds = Buffer.from(
         `${ctx.harper.admin.username}:${ctx.harper.admin.password}`
@@ -41,24 +43,24 @@ function authHeaders(ctx: ContextWithHarper): Record<string, string> {
     return { Authorization: `Basic ${creds}` };
 }
 
-suite('azure-secrets-to-environment extension (managedCredentials: true)', (ctx: ContextWithHarper) => {
+suite('azure-secrets-to-environment extension (managedCredentials: true)', () => {
     before(async () => {
-        await setupHarperWithFixture(ctx, FIXTURE_PATH, { harperBinPath });
+        harperCtx = await setupHarperWithFixture(FIXTURE_PATH, { harperBinPath });
     });
 
     after(async () => {
-        await teardownHarper(ctx);
+        await teardownHarper(harperCtx);
     });
 
     test('Harper starts successfully with the extension loaded', async () => {
         // A successful before() means the extension's start() hook returned without
         // throwing (managedCredentials: true — no Azure call at startup).
-        ok(ctx.harper.httpURL, 'httpURL should be populated after a successful start');
+        ok(harperCtx.harper.httpURL, 'httpURL should be populated after a successful start');
     });
 
     test('Harper HTTP endpoint responds (basic health check)', async () => {
-        const res = await fetch(`${ctx.harper.httpURL}/`, {
-            headers: authHeaders(ctx),
+        const res = await fetch(`${harperCtx.harper.httpURL}/`, {
+            headers: authHeaders(harperCtx),
         });
         // The extension adds no HTTP routes of its own, so the root may return
         // 200 (Operations API default) or 404.  Any non-5xx status confirms
@@ -71,10 +73,10 @@ suite('azure-secrets-to-environment extension (managedCredentials: true)', (ctx:
     });
 
     test('Operations API is reachable', async () => {
-        const res = await fetch(`${ctx.harper.operationsAPIURL}`, {
+        const res = await fetch(`${harperCtx.harper.operationsAPIURL}`, {
             method: 'POST',
             headers: {
-                ...authHeaders(ctx),
+                ...authHeaders(harperCtx),
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({ operation: 'system_information' }),

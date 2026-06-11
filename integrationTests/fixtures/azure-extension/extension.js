@@ -44,10 +44,8 @@ function fetchVaultCreds(vaultName) {
     try {
       vaultMap = JSON.parse(process.env.AZURE_VAULT_MAP);
     } catch (e) {
-      console.warn(`Unable to parse AZURE_VAULT_MAP: ${e.message
-        ? e.message
-        : e.toString()
-        }`);
+      const reason = e.message ? e.message : e.toString();
+      throw new Error(`Unable to parse AZURE_VAULT_MAP (${reason}) — cannot look up credentials for "${vaultName}"`);
     }
 
     vaultCreds = vaultMap?.[vaultName];
@@ -73,7 +71,7 @@ async function fetchAndSetSecrets({ AZURE_VAULT_NAME, AZURE_TENANT_ID, AZURE_CLI
 
   const secretsList = SECRETS_LIST ? SECRETS_LIST.split(',') : [];
 
-  const promises = [];
+  let promises = [];
 
   if (secretsList.length > 0) {
     promises = secretsList.map((secretName) => fetchAndSetSecret(client, secretName));
@@ -91,9 +89,9 @@ async function fetchAndSetSecret(client, secretName) {
   try {
     const secret = await client.getSecret(secretName);
     //set secret to process.env.  Because Azure KV does not support underscores, we put the secret names with dashes.  On retrieval we replace dashes with underscore
-    secretName = [secret.name.replace(/-/g, '_')];
-    process.env[secretName] = secret.value;
+    const envKey = secret.name.replace(/-/g, '_');
+    process.env[envKey] = secret.value;
   } catch (error) {
-    console.warn(error.message);
+    console.warn(`Failed to fetch secret "${secretName}": ${error.message}`);
   }
 }
