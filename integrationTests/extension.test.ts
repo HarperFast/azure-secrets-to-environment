@@ -34,7 +34,7 @@ const harperBinPath = resolve(dirname(require.resolve('harper')), 'bin/harper.js
 
 const FIXTURE_PATH = resolve(__dirname, 'fixtures', 'azure-extension');
 
-let harperCtx: ContextWithHarper;
+const harperCtx = {} as ContextWithHarper;
 
 function authHeaders(ctx: ContextWithHarper): Record<string, string> {
     const creds = Buffer.from(
@@ -45,7 +45,7 @@ function authHeaders(ctx: ContextWithHarper): Record<string, string> {
 
 suite('azure-secrets-to-environment extension (managedCredentials: true)', () => {
     before(async () => {
-        harperCtx = await setupHarperWithFixture(FIXTURE_PATH, { harperBinPath });
+        await setupHarperWithFixture(harperCtx, FIXTURE_PATH, { harperBinPath });
     });
 
     after(async () => {
