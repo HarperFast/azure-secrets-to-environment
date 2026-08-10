@@ -5,19 +5,23 @@
   "description": "This project accesses an Azure key vault and assigns the secrets to environment variables.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "test:integration": "harper-integration-test-run \"integrationTests/**/*.test.ts\""
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/HarperDB/azure-secrets-to-environment.git"
+    "url": "git+https://github.com/HarperFast/azure-secrets-to-environment.git"
   },
   "keywords": [
-    "HarperDB",
+    "Harper",
     "secrets",
     "key",
     "vault"
   ],
-  "author": "HarperDB, Inc.",
+  "author": "Harper, Inc.",
+  "engines": {
+    "harper": "^5.0"
+  },
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/HarperDB/azure-secrets-to-environment/issues"
@@ -27,5 +31,10 @@
     "@azure/identity": "^4.5.0",
     "@azure/keyvault-secrets": "^4.9.0",
     "dotenv": "^16.4.7"
+  },
+  "devDependencies": {
+    "@harperfast/integration-testing": "^0.4.0",
+    "harper": "^5.2.1",
+    "typescript": "^6.0.3"
   }
 }

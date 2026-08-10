@@ -1,5 +1,7 @@
 .idea
-package-lock.json
+# package-lock.json is committed (needed for reproducible CI installs)
+# node_modules — ignored everywhere (Harper auto-installs component deps at startup)
+node_modules/
 
 # Logs
 logs
@@ -42,7 +44,6 @@ bower_components
 build/Release
 
 # Dependency directories
-node_modules/
 jspm_packages/
 
 # Snowpack dependency directory (https://snowpack.dev/)
